@@ -4,7 +4,9 @@ import mongodb from "@fastify/mongodb";
 import fastifyCors from "@fastify/cors";
 import fastify from "fastify";
 
-const server = fastify();
+const server = fastify({
+  logger: true,
+});
 
 server.register(mongodb, {
   // force to close the mongodb connection when app stopped
@@ -58,6 +60,7 @@ const start = async () => {
     await server.listen({ port: parseInt(process.env.PORT || "8080"), host: process.env.HOST || "0.0.0.0" })
   } catch (err) {
     server.log.error(err);
+    console.log(err)
     process.exit(1);
   }
 }
