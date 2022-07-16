@@ -16,7 +16,7 @@ server.register(mongodb_1.default, {
     url: 'mongodb+srv://mitmellone:S8P4O61xExgaF9iU@mitmellone-db.0t5rx.mongodb.net/weddingwebsite?retryWrites=true&w=majority'
 });
 server.register(cors_1.default, {
-    origin: ["http://localhost:3000"]
+    origin: ["http://localhost:3000", "https://mellone-weddingwebsite-client.herokuapp.com/"]
 });
 // Declare a route
 server.get('/', async (request, reply) => {
@@ -52,7 +52,8 @@ server.post('/guests', function (request, reply) {
 // Run the server!
 const start = async () => {
     try {
-        await server.listen({ port: 3001 });
+        console.log(`starting server on port ${process.env.PORT}, host: ${process.env.HOST}`);
+        await server.listen({ port: parseInt(process.env.PORT || "8080"), host: process.env.HOST || "0.0.0.0" });
     }
     catch (err) {
         server.log.error(err);

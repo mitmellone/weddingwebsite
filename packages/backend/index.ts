@@ -55,7 +55,7 @@ server.post('/guests', function(request, reply) {
 const start = async () => {
   try {
     console.log(`starting server on port ${process.env.PORT}, host: ${process.env.HOST}`)
-    await server.listen({ port: parseInt(process.env.PORT) || 8080, host: process.env.HOST || "0.0.0.0" })
+    await server.listen({ port: parseInt(process.env.PORT || "8080"), host: process.env.HOST || "0.0.0.0" })
   } catch (err) {
     server.log.error(err);
     process.exit(1);
