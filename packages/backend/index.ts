@@ -1,6 +1,7 @@
 // Require the framework and instantiate it
 // const fastify = require('fastify')({ logger: true })
 import mongodb from "@fastify/mongodb";
+import fastifyCors from "@fastify/cors";
 import fastify from "fastify";
 
 const server = fastify();
@@ -11,6 +12,10 @@ server.register(mongodb, {
   forceClose: true,
   
   url: 'mongodb+srv://mitmellone:S8P4O61xExgaF9iU@mitmellone-db.0t5rx.mongodb.net/weddingwebsite?retryWrites=true&w=majority'
+});
+
+server.register(fastifyCors, {
+  origin: ["http://localhost:3000"]
 })
 
 // Declare a route
@@ -56,3 +61,4 @@ const start = async () => {
   }
 }
 start();
+console.log("Server started")

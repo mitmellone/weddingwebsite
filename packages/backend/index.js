@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Require the framework and instantiate it
 // const fastify = require('fastify')({ logger: true })
 const mongodb_1 = __importDefault(require("@fastify/mongodb"));
+const cors_1 = __importDefault(require("@fastify/cors"));
 const fastify_1 = __importDefault(require("fastify"));
 const server = (0, fastify_1.default)();
 server.register(mongodb_1.default, {
@@ -13,6 +14,9 @@ server.register(mongodb_1.default, {
     // the default value is false
     forceClose: true,
     url: 'mongodb+srv://mitmellone:S8P4O61xExgaF9iU@mitmellone-db.0t5rx.mongodb.net/weddingwebsite?retryWrites=true&w=majority'
+});
+server.register(cors_1.default, {
+    origin: ["http://localhost:3000"]
 });
 // Declare a route
 server.get('/', async (request, reply) => {
@@ -56,3 +60,4 @@ const start = async () => {
     }
 };
 start();
+console.log("Server started");
