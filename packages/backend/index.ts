@@ -15,7 +15,7 @@ server.register(mongodb, {
 });
 
 server.register(fastifyCors, {
-  origin: ["http://localhost:3000"]
+  origin: ["http://localhost:3000", "https://mellone-weddingwebsite-client.herokuapp.com/"]
 })
 
 // Declare a route
@@ -54,7 +54,7 @@ server.post('/guests', function(request, reply) {
 // Run the server!
 const start = async () => {
   try {
-    await server.listen({ port: 3001 })
+    await server.listen({ port: Number(process.env.PORT) || 3001, host: process.env.HOST || "0.0.0.0" })
   } catch (err) {
     server.log.error(err);
     process.exit(1);
