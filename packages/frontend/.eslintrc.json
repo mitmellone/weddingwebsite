@@ -1,0 +1,45 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "plugin:react/recommended",
+        "airbnb",
+        "airbnb-typescript",
+        "prettier"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "project": "./tsconfig.json"
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint",
+        "react-hooks",
+        "prettier"
+    ],
+    "rules": {
+        "react/react-in-jsx-scope": "off",
+        "react/no-unescaped-entities": ["error", {"forbid": [{
+            "char": ">",
+            "alternatives": ["&gt;"]
+        }, {
+            "char": "}",
+            "alternatives": ["&#125;"]
+        }]}],
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
+        "import/prefer-default-export": "off",
+        "import/no-named-as-default": "off",
+        "react/jsx-props-no-spreading": "off",
+        "react/require-default-props": "off",
+        "@typescript-eslint/no-use-before-define": "off"
+
+    }
+}
