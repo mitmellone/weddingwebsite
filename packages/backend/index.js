@@ -8,7 +8,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_1 = __importDefault(require("@fastify/mongodb"));
 const cors_1 = __importDefault(require("@fastify/cors"));
 const fastify_1 = __importDefault(require("fastify"));
-const server = (0, fastify_1.default)();
+const server = (0, fastify_1.default)({
+    logger: true,
+});
 server.register(mongodb_1.default, {
     // force to close the mongodb connection when app stopped
     // the default value is false
@@ -57,6 +59,7 @@ const start = async () => {
     }
     catch (err) {
         server.log.error(err);
+        console.log(err);
         process.exit(1);
     }
 };

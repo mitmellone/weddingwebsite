@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "start": "node index.js"
+    "start": "node index.js",
+    "start-local": "HOST=127.0.0.1 node index.js"
   },
   "dependencies": {
     "@fastify/cors": "^8.0.0",

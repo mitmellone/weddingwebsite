@@ -6,6 +6,7 @@ import fastify from "fastify";
 
 const server = fastify({
   logger: true,
+  pluginTimeout: 60000,
 });
 
 server.register(mongodb, {
@@ -13,7 +14,8 @@ server.register(mongodb, {
   // the default value is false
   forceClose: true,
   
-  url: 'mongodb+srv://mitmellone:S8P4O61xExgaF9iU@mitmellone-db.0t5rx.mongodb.net/weddingwebsite?retryWrites=true&w=majority'
+  url: 'mongodb+srv://mitmellone:S8P4O61xExgaF9iU@mitmellone-db.0t5rx.mongodb.net/weddingwebsite?retryWrites=true&w=majority',
+  connectTimeoutMS: 60000,
 });
 
 server.register(fastifyCors, {
