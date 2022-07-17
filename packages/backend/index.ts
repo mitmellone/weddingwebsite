@@ -19,7 +19,7 @@ server.register(mongodb, {
 });
 
 server.register(fastifyCors, {
-  origin: ["http://localhost:3000", "https://mellone-weddingwebsite-client.herokuapp.com/"]
+  origin: ["http://localhost:3000", "https://mellone-weddingwebsite-client.herokuapp.com"]
 })
 
 // Declare a route
