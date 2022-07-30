@@ -1,6 +1,19 @@
 import { FormEventHandler, useEffect, useState } from "react";
-import { Button, CircularProgress, Grid, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
-import DeleteIcon from '@mui/icons-material/Delete';
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { createGuest, deleteGuest, getGuests, Guest, GuestCreatePayload } from "api";
 
 export default function Manage() {
@@ -8,25 +21,31 @@ export default function Manage() {
   const [guestListLoading, setGuestListLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string>();
 
-
   useEffect(() => {
-    getGuests().then((guests) => {
-      setGuestList(guests);
-      setGuestListLoading(false);    
-    }, (error) => {
-      setErrorMessage(error);
-      setGuestListLoading(false);
-    })
-  }, [])
+    getGuests().then(
+      (guests) => {
+        setGuestList(guests);
+        setGuestListLoading(false);
+      },
+      (error) => {
+        setErrorMessage(error);
+        setGuestListLoading(false);
+      },
+    );
+  }, []);
 
   const createNewGuest = async (newGuest: GuestCreatePayload) => {
     await createGuest(newGuest);
     getGuests().then(setGuestList, setErrorMessage);
-  }
+  };
 
   return (
     <>
-      <GuestList guestList={guestList} guestListLoading={guestListLoading} onUpdateGuest={() => getGuests().then(setGuestList, setErrorMessage)}/>
+      <GuestList
+        guestList={guestList}
+        guestListLoading={guestListLoading}
+        onUpdateGuest={() => getGuests().then(setGuestList, setErrorMessage)}
+      />
       <NewGuestForm createNewGuest={createNewGuest} />
       {errorMessage && <Typography variant="body1">Error: {errorMessage}</Typography>}
     </>
@@ -43,15 +62,20 @@ function NewGuestForm({ createNewGuest }: NewGuestFormProps) {
 
   const onSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
-    createNewGuest({name, table: Number.parseInt(tableNumber, 10)});
+    createNewGuest({ name, table: Number.parseInt(tableNumber, 10) });
     setName("");
     setTableNumber("");
-  }
+  };
 
   return (
     <Grid sx={{ paddingTop: 2 }} container spacing={2} component="form" onSubmit={onSubmit}>
       <Grid item xs={6}>
-        <TextField label="Name" value={name} onChange={(event) => setName(event.target.value)} fullWidth />
+        <TextField
+          label="Name"
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+          fullWidth
+        />
       </Grid>
       <Grid item xs={3}>
         <TextField
@@ -65,7 +89,9 @@ function NewGuestForm({ createNewGuest }: NewGuestFormProps) {
         />
       </Grid>
       <Grid item xs={3}>
-        <Button type="submit" variant="outlined">Create</Button>
+        <Button type="submit" variant="outlined">
+          Create
+        </Button>
       </Grid>
     </Grid>
   );
@@ -78,10 +104,9 @@ interface GuestListProps {
 }
 
 function GuestList({ guestList, guestListLoading, onUpdateGuest }: GuestListProps) {
-
   if (guestListLoading) {
-    return <CircularProgress />
-  };
+    return <CircularProgress />;
+  }
 
   return (
     <TableContainer>
@@ -99,10 +124,17 @@ function GuestList({ guestList, guestListLoading, onUpdateGuest }: GuestListProp
               <TableCell>{name}</TableCell>
               <TableCell>{table}</TableCell>
               <TableCell>{artist}</TableCell>
-              <TableCell><IconButton color="primary" onClick={() => {
-                deleteGuest(_id);
-                onUpdateGuest();
-              }}><DeleteIcon /></IconButton></TableCell>
+              <TableCell>
+                <IconButton
+                  color="primary"
+                  onClick={() => {
+                    deleteGuest(_id);
+                    onUpdateGuest();
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

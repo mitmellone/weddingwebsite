@@ -32,9 +32,9 @@ export const themeOptions: ThemeOptions = {
       styleOverrides: {
         root: ({ theme }) => ({
           padding: theme.spacing(2),
-        })
+        }),
       },
-    }
+    },
   },
 };
 

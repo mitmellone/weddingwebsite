@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const weddingWebsiteBackend = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3001'
-})
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:3001",
+});
 
 export interface ApiError {
   status: number;
@@ -23,7 +23,9 @@ export async function getGuests(): Promise<Guest[]> {
   if (response.status === 200) {
     return response.data;
   }
-  return Promise.reject(new Error(`Could not fetch guests: ${response.statusText} ${JSON.stringify(response.data)}`));
+  return Promise.reject(
+    new Error(`Could not fetch guests: ${response.statusText} ${JSON.stringify(response.data)}`),
+  );
 }
 
 export async function createGuest(newGuest: GuestCreatePayload): Promise<Guest> {
@@ -32,7 +34,9 @@ export async function createGuest(newGuest: GuestCreatePayload): Promise<Guest> 
     return response.data;
   }
 
-  return Promise.reject(new Error(`Could not create guest: ${response.statusText} ${JSON.stringify(response.data)}`))
+  return Promise.reject(
+    new Error(`Could not create guest: ${response.statusText} ${JSON.stringify(response.data)}`),
+  );
 }
 
 export async function deleteGuest(guestId: string): Promise<void> {
@@ -41,5 +45,7 @@ export async function deleteGuest(guestId: string): Promise<void> {
     return response.data;
   }
 
-  return Promise.reject(new Error(`Could not delete guest: ${response.statusText} ${JSON.stringify(response.data)}`))
+  return Promise.reject(
+    new Error(`Could not delete guest: ${response.statusText} ${JSON.stringify(response.data)}`),
+  );
 }

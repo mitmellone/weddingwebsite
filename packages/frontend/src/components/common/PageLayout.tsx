@@ -7,5 +7,9 @@ const StyledContainer = styled(Container)(({ theme }) => ({
 }));
 
 export default function PageLayout({ children, ...props }: PropsWithChildren<ContainerProps>) {
-  return <StyledContainer maxWidth="lg" {...props}>{children}</StyledContainer>;
+  return (
+    <StyledContainer maxWidth="lg" {...props}>
+      {children}
+    </StyledContainer>
+  );
 }
