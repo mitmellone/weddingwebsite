@@ -28,6 +28,13 @@ export const themeOptions: ThemeOptions = {
         }),
       },
     },
+    MuiButton: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          padding: theme.spacing(2),
+        })
+      },
+    }
   },
 };
 

@@ -10,9 +10,13 @@ export interface ApiError {
 }
 
 export interface Guest {
+  _id: string;
   name: string;
-  tableNumber: number;
+  table: number;
+  artist?: string;
 }
+
+export type GuestCreatePayload = Omit<Guest, "_id">;
 
 export async function getGuests(): Promise<Guest[]> {
   const response = await weddingWebsiteBackend.get<Guest[]>("/guests");
@@ -20,4 +24,22 @@ export async function getGuests(): Promise<Guest[]> {
     return response.data;
   }
   return Promise.reject(new Error(`Could not fetch guests: ${response.statusText} ${JSON.stringify(response.data)}`));
+}
+
+export async function createGuest(newGuest: GuestCreatePayload): Promise<Guest> {
+  const response = await weddingWebsiteBackend.post<Guest>("/guests", newGuest);
+  if (response.status === 201) {
+    return response.data;
+  }
+
+  return Promise.reject(new Error(`Could not create guest: ${response.statusText} ${JSON.stringify(response.data)}`))
+}
+
+export async function deleteGuest(guestId: string): Promise<void> {
+  const response = await weddingWebsiteBackend.delete(`/guests/${guestId}`);
+  if (response.status === 204) {
+    return response.data;
+  }
+
+  return Promise.reject(new Error(`Could not delete guest: ${response.statusText} ${JSON.stringify(response.data)}`))
 }

@@ -49,10 +49,18 @@ server.post('/guests', function(request, reply) {
       if (err) {
         reply.send(err);
       } else {
-        reply.send(result);
+        reply.code(201).send(result);
       }
     });
   }
+})
+
+server.delete<{ Params: { guestId: string }}>('/guests/:guestId', function(request, reply) {
+  const { guestId } = request.params;
+
+  const guestCollection = this.mongo.db?.collection("guests");
+  guestCollection?.deleteOne({ _id: guestId }).then(() => reply.code(204).send()).catch(() => reply.code(500).send());
+
 })
 
 // Run the server!
