@@ -20,11 +20,11 @@ server.register(mongodb, {
 
 server.register(fastifyCors, {
   origin: ["http://localhost:3000", "https://mellone-weddingwebsite-client.herokuapp.com"]
-})
+});
 
 // Declare a route
-server.get('/', async (request, reply) => {
-  return { hello: 'world' }
+server.get('/healthCheck', async (request, reply) => {
+  return { status: "healthy" };
 });
 
 server.get('/guests', function(request, reply) {
@@ -53,13 +53,15 @@ server.post('/guests', function(request, reply) {
       }
     });
   }
-})
+});
 
 server.delete<{ Params: { guestId: string }}>('/guests/:guestId', function(request, reply) {
   const { guestId } = request.params;
 
+  console.log("guestId is:", guestId);
+
   const guestCollection = this.mongo.db?.collection("guests");
-  guestCollection?.deleteOne({ _id: guestId }).then(() => reply.code(204).send()).catch(() => reply.code(500).send());
+  guestCollection?.deleteOne({ _id: new this.mongo.ObjectId(guestId) }).then(() => reply.code(204).send());
 
 })
 

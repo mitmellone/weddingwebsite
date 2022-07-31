@@ -116,6 +116,7 @@ function GuestList({ guestList, guestListLoading, onUpdateGuest }: GuestListProp
             <TableCell>Name</TableCell>
             <TableCell>Table Number</TableCell>
             <TableCell>Artist</TableCell>
+            <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -127,9 +128,9 @@ function GuestList({ guestList, guestListLoading, onUpdateGuest }: GuestListProp
               <TableCell>
                 <IconButton
                   color="primary"
-                  onClick={() => {
-                    deleteGuest(_id);
-                    onUpdateGuest();
+                  onClick={async () => {
+                    await deleteGuest(_id);
+                    await onUpdateGuest();
                   }}
                 >
                   <DeleteIcon />
