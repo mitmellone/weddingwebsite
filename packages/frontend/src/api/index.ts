@@ -30,8 +30,18 @@ interface ListResponse<T> {
 export type GuestCreatePayload = Omit<Guest, "_id">;
 export type TableCreatePayload = Omit<Table, "_id">;
 
-export async function getGuests(): Promise<Guest[]> {
-  const response = await weddingWebsiteBackend.get<ListResponse<Guest>>("/guests");
+interface GetGuestsOptions {
+  nameQuery?: string;
+}
+
+export async function getGuests(options?: GetGuestsOptions): Promise<Guest[]> {
+  const params = new URLSearchParams();
+
+  if (options?.nameQuery) {
+    params.append("match", `name=(?i)${options.nameQuery}`);
+  }
+
+  const response = await weddingWebsiteBackend.get<ListResponse<Guest>>("/guests", { params });
   if (response.status < 300) {
     return response.data.items;
   }

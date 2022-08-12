@@ -1,99 +1,41 @@
-import { Autocomplete, TextField, Typography, styled } from "@mui/material";
+import { Autocomplete, TextField, Typography } from "@mui/material";
+import { getGuests, Guest } from "api";
 import { useState } from "react";
+import ReactAudioPlayer from "react-audio-player";
 
-// todo fetch from api
-const names = ["Steve Mellone", "Lisa Mellone", "Neal Mathes", "Mary Farahmand"];
-const data = [
-  {
-    name: "Steve Mellone",
-    table: 1,
-    artist: "The Black Keys",
-    videoEmbedId: "6yCIDkFI7ew",
-  },
-  {
-    name: "Lisa Mellone",
-    table: 1,
-    artist: "The Black Keys",
-    videoEmbedId: "6yCIDkFI7ew",
-  },
-  {
-    name: "Neal Mathes",
-    table: 1,
-    artist: "Ripe",
-    videoEmbedId: "gmE-33ZGOfg",
-  },
-  {
-    name: "Mary Farahmand",
-    table: 1,
-    artist: "FINNEAS",
-    videoEmbedId: "VaKzNtwPQxE",
-  },
-];
-
-function getDataForName(nameQuery: string) {
-  return data.find(({ name }) => name === nameQuery);
-}
+// todo move to server maybe
 
 export default function FindYourSeat() {
-  const [selectedName, setSelectedName] = useState<string | null>(null);
-  const [inputValue, setInputValue] = useState("");
+  const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
+
+  const [guestSearchResults, setGuestSearchResults] = useState<Guest[]>([]);
 
   return (
     <>
       <Typography variant="h3" align="center" color="primary" gutterBottom>
         Find your seat
       </Typography>
-      <Autocomplete<string>
-        value={selectedName}
-        onChange={(_, newValue) => setSelectedName(newValue)}
-        inputValue={inputValue}
-        onInputChange={(_, newInputValue) => setInputValue(newInputValue)}
-        options={names}
+      <Autocomplete<Guest>
+        onChange={(_, newValue) => setSelectedGuest(newValue)}
+        onInputChange={(_, inputValue) =>
+          getGuests({ nameQuery: inputValue }).then(setGuestSearchResults)
+        }
+        options={guestSearchResults}
         fullWidth
-        renderInput={(params) => <TextField {...params} label="Select your name" />}
+        getOptionLabel={(option) => option.name}
+        renderInput={(params) => (
+          <TextField {...params} value={selectedGuest?.name} label="Select your name" />
+        )}
+        filterOptions={(x) => x}
       />
-      {selectedName && <YoutubeVideo embedId={getDataForName(selectedName)?.videoEmbedId} />}
+      {selectedGuest && (
+        <>
+          <Typography variant="h6" sx={{ mt: 4 }}>
+            Can you name this artist?
+          </Typography>
+          <ReactAudioPlayer controls src="https://docs.google.com/uc?export=download&id=1lJT1DRj_5G9ZuaWWRx4F6iZ1JP6VKdQ0-" />
+        </>
+      )}
     </>
-  );
-}
-
-interface YoutubeVideoProps {
-  embedId?: string;
-}
-
-const VideoResponsiveContainer = styled("div")(({ theme }) => ({
-  overflow: "hidden",
-  paddingBottom: theme.spacing(2),
-  position: "relative",
-  display: "flex",
-  height: 360,
-  marginTop: theme.spacing(2),
-  "& iframe": {
-    left: 0,
-    top: 0,
-    paddingTop: 120,
-    border: "none",
-    marginTop: -60,
-    height: "100%",
-    width: "100%",
-    position: "absolute",
-  },
-}));
-
-function YoutubeVideo({ embedId }: YoutubeVideoProps) {
-  if (!embedId) {
-    return <Typography variant="body1">Who are you?</Typography>;
-  }
-  return (
-    <VideoResponsiveContainer>
-      <Typography variant="h5">Can you name the artist?</Typography>
-      <iframe
-        width="360"
-        height="360"
-        src={`https://www.youtube.com/embed/${embedId}?modestbranding=1&autoplay=1`}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        title="Do you know the artist?"
-      />
-    </VideoResponsiveContainer>
   );
 }
