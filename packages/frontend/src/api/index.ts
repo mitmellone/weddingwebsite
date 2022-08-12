@@ -16,12 +16,24 @@ export interface Guest {
   artist?: string;
 }
 
+export interface Table {
+  _id: string;
+  tableNumber: number;
+  artist: string;
+}
+
+interface ListResponse<T> {
+  items: Array<T>;
+  total: number;
+}
+
 export type GuestCreatePayload = Omit<Guest, "_id">;
+export type TableCreatePayload = Omit<Table, "_id">;
 
 export async function getGuests(): Promise<Guest[]> {
-  const response = await weddingWebsiteBackend.get<Guest[]>("/guests");
-  if (response.status === 200) {
-    return response.data;
+  const response = await weddingWebsiteBackend.get<ListResponse<Guest>>("/guests");
+  if (response.status < 300) {
+    return response.data.items;
   }
   return Promise.reject(
     new Error(`Could not fetch guests: ${response.statusText} ${JSON.stringify(response.data)}`),
@@ -30,7 +42,7 @@ export async function getGuests(): Promise<Guest[]> {
 
 export async function createGuest(newGuest: GuestCreatePayload): Promise<Guest> {
   const response = await weddingWebsiteBackend.post<Guest>("/guests", newGuest);
-  if (response.status === 201) {
+  if (response.status < 300) {
     return response.data;
   }
 
@@ -41,8 +53,40 @@ export async function createGuest(newGuest: GuestCreatePayload): Promise<Guest> 
 
 export async function deleteGuest(guestId: string): Promise<void> {
   const response = await weddingWebsiteBackend.delete(`/guests/${guestId}`);
-  if (response.status === 204) {
+  if (response.status < 300) {
+    return Promise.resolve();
+  }
+
+  return Promise.reject(
+    new Error(`Could not delete guest: ${response.statusText} ${JSON.stringify(response.data)}`),
+  );
+}
+
+export async function getTables(): Promise<Table[]> {
+  const response = await weddingWebsiteBackend.get<ListResponse<Table>>("/tables");
+  if (response.status < 300) {
+    return response.data.items;
+  }
+  return Promise.reject(
+    new Error(`Could not fetch guests: ${response.statusText} ${JSON.stringify(response.data)}`),
+  );
+}
+
+export async function createTable(newTable: TableCreatePayload): Promise<Table> {
+  const response = await weddingWebsiteBackend.post<Table>("/tables", newTable);
+  if (response.status < 300) {
     return response.data;
+  }
+
+  return Promise.reject(
+    new Error(`Could not create guest: ${response.statusText} ${JSON.stringify(response.data)}`),
+  );
+}
+
+export async function deleteTable(tableId: string): Promise<void> {
+  const response = await weddingWebsiteBackend.delete(`/tables/${tableId}`);
+  if (response.status < 300) {
+    return Promise.resolve();
   }
 
   return Promise.reject(
