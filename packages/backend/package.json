@@ -9,6 +9,7 @@
     "start:watch": "nodemon"
   },
   "dependencies": {
+    "@fastify/cors": "^8.1.0",
     "fastify": "^4.3.0",
     "fastify-mongoose-api": "^1.2.17",
     "mongoose": "^6.5.1"

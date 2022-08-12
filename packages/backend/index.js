@@ -1,12 +1,17 @@
 // ESM
 import Fastify from "fastify";
-import fastifyMongooseAPI from "fastify-mongoose-api"
+import fastifyMongooseAPI from "fastify-mongoose-api";
+import fastifyCors from "@fastify/cors";
 import mongoose from "mongoose";
 import { config } from "./config.js";
 import { initializeModels } from "./models/index.js";
 
 const fastify = Fastify({
   logger: true
+});
+
+fastify.register(fastifyCors, {
+  origin: ["http://localhost:3000", "https://mellone-weddingwebsite-client.herokuapp.com"]
 });
 
 async function initializeDatabase() {
@@ -40,7 +45,7 @@ async function start() {
     await initializeDatabase();
 
     // Run the server!
-    fastify.listen({ port: 8080 }, function (err, address) {
+    fastify.listen({ port: 3001 }, function (err, address) {
       if (err) {
         fastify.log.error(err)
         process.exit(1)

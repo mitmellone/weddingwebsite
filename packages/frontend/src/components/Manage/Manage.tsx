@@ -1,24 +1,27 @@
-import { FormEventHandler, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { Typography } from "@mui/material";
 import {
-  Button,
-  CircularProgress,
-  Grid,
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
-  Typography,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { createGuest, deleteGuest, getGuests, Guest, GuestCreatePayload } from "api";
+  createGuest,
+  createTable,
+  getGuests,
+  getTables,
+  Guest,
+  GuestCreatePayload,
+  Table as SeatingTable,
+  TableCreatePayload,
+} from "api";
+import TableList from "./TableList";
+import GuestList from "./GuestList";
+import NewGuestForm from "./NewGuestForm";
+import NewTableForm from "./NewTableForm";
 
 export default function Manage() {
   const [guestList, setGuestList] = useState<Guest[]>([]);
   const [guestListLoading, setGuestListLoading] = useState(true);
+
+  const [tableList, setTableList] = useState<SeatingTable[]>([]);
+  const [tableListLoading, setTableListLoading] = useState(true);
+
   const [errorMessage, setErrorMessage] = useState<string>();
 
   useEffect(() => {
@@ -32,6 +35,17 @@ export default function Manage() {
         setGuestListLoading(false);
       },
     );
+
+    getTables().then(
+      (tables) => {
+        setTableList(tables);
+        setTableListLoading(false);
+      },
+      (error) => {
+        setErrorMessage(error);
+        setTableListLoading(false);
+      },
+    );
   }, []);
 
   const createNewGuest = async (newGuest: GuestCreatePayload) => {
@@ -39,107 +53,26 @@ export default function Manage() {
     getGuests().then(setGuestList, setErrorMessage);
   };
 
+  const createNewTable = async (newTable: TableCreatePayload) => {
+    await createTable(newTable);
+    getTables().then(setTableList, setErrorMessage);
+  };
+
   return (
     <>
+      <TableList
+        tableList={tableList}
+        tableListLoading={tableListLoading}
+        onUpdateTable={() => getTables().then(setTableList, setErrorMessage)}
+      />
+      <NewTableForm createNewTable={createNewTable} sx={{ py: 4 }} />
       <GuestList
         guestList={guestList}
         guestListLoading={guestListLoading}
         onUpdateGuest={() => getGuests().then(setGuestList, setErrorMessage)}
       />
-      <NewGuestForm createNewGuest={createNewGuest} />
+      <NewGuestForm createNewGuest={createNewGuest} tables={tableList} sx={{ pt: 4 }} />
       {errorMessage && <Typography variant="body1">Error: {errorMessage}</Typography>}
     </>
-  );
-}
-
-interface NewGuestFormProps {
-  createNewGuest: (newGuest: GuestCreatePayload) => void;
-}
-
-function NewGuestForm({ createNewGuest }: NewGuestFormProps) {
-  const [name, setName] = useState("");
-  const [tableNumber, setTableNumber] = useState("");
-
-  const onSubmit: FormEventHandler<HTMLFormElement> = (event) => {
-    event.preventDefault();
-    createNewGuest({ name, table: Number.parseInt(tableNumber, 10) });
-    setName("");
-    setTableNumber("");
-  };
-
-  return (
-    <Grid sx={{ paddingTop: 2 }} container spacing={2} component="form" onSubmit={onSubmit}>
-      <Grid item xs={6}>
-        <TextField
-          label="Name"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          fullWidth
-        />
-      </Grid>
-      <Grid item xs={3}>
-        <TextField
-          label="Table"
-          inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-          value={tableNumber}
-          onChange={(event) => {
-            setTableNumber(event.target.value);
-          }}
-          fullWidth
-        />
-      </Grid>
-      <Grid item xs={3}>
-        <Button type="submit" variant="outlined">
-          Create
-        </Button>
-      </Grid>
-    </Grid>
-  );
-}
-
-interface GuestListProps {
-  guestList: Guest[];
-  guestListLoading: boolean;
-  onUpdateGuest: () => void;
-}
-
-function GuestList({ guestList, guestListLoading, onUpdateGuest }: GuestListProps) {
-  if (guestListLoading) {
-    return <CircularProgress />;
-  }
-
-  return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Table Number</TableCell>
-            <TableCell>Artist</TableCell>
-            <TableCell>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {guestList.map(({ _id, name, table, artist }) => (
-            <TableRow key={_id}>
-              <TableCell>{name}</TableCell>
-              <TableCell>{table}</TableCell>
-              <TableCell>{artist}</TableCell>
-              <TableCell>
-                <IconButton
-                  color="primary"
-                  onClick={async () => {
-                    await deleteGuest(_id);
-                    await onUpdateGuest();
-                  }}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
   );
 }
