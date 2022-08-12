@@ -1,6 +1,6 @@
-import { Autocomplete, TextField, Typography } from "@mui/material";
+import { Autocomplete, Button, TextField, Typography } from "@mui/material";
 import { getGuests, Guest } from "api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactAudioPlayer from "react-audio-player";
 
 // todo move to server maybe
@@ -9,6 +9,16 @@ export default function FindYourSeat() {
   const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
 
   const [guestSearchResults, setGuestSearchResults] = useState<Guest[]>([]);
+
+  const [showHintButton, setShowHintButton] = useState(false);
+  useEffect(() => {
+    if (selectedGuest) {
+      setShowHintButton(false);
+      setTimeout(() => {
+        setShowHintButton(true);
+      }, 10000);
+    }
+  }, [selectedGuest]);
 
   return (
     <>
@@ -27,13 +37,17 @@ export default function FindYourSeat() {
           <TextField {...params} value={selectedGuest?.name} label="Select your name" />
         )}
         filterOptions={(x) => x}
+        isOptionEqualToValue={(option, value) => option._id === value._id }
       />
       {selectedGuest && (
         <>
-          <Typography variant="h6" sx={{ mt: 4 }}>
+          <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
             Can you name this artist?
           </Typography>
-          <ReactAudioPlayer controls src="https://docs.google.com/uc?export=download&id=1lJT1DRj_5G9ZuaWWRx4F6iZ1JP6VKdQ0-" />
+          <ReactAudioPlayer controls autoPlay src={selectedGuest.artist === "The Black Keys" ? "blackkeys.mp3" : "redHotChiliPeppers.mp3"} />
+          {showHintButton && (
+            <Button variant="contained" sx={{ mt: 2 }}>Need a hint?</Button>
+          )}
         </>
       )}
     </>

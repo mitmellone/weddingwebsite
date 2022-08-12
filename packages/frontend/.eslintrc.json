@@ -39,7 +39,7 @@
         "import/no-named-as-default": "off",
         "react/jsx-props-no-spreading": "off",
         "react/require-default-props": "off",
-        "@typescript-eslint/no-use-before-define": "off"
-
+        "@typescript-eslint/no-use-before-define": "off",
+        "no-underscore-dangle": "off"
     }
 }
