@@ -25,7 +25,7 @@ export default function Manage() {
   const [errorMessage, setErrorMessage] = useState<string>();
 
   useEffect(() => {
-    getGuests().then(
+    getGuests({ limit: 200 }).then(
       (guests) => {
         setGuestList(guests);
         setGuestListLoading(false);
@@ -50,7 +50,7 @@ export default function Manage() {
 
   const createNewGuest = async (newGuest: GuestCreatePayload) => {
     await createGuest(newGuest);
-    getGuests().then(setGuestList, setErrorMessage);
+    getGuests({ limit: 200 }).then(setGuestList, setErrorMessage);
   };
 
   const createNewTable = async (newTable: TableCreatePayload) => {
@@ -69,7 +69,7 @@ export default function Manage() {
       <GuestList
         guestList={guestList}
         guestListLoading={guestListLoading}
-        onUpdateGuest={() => getGuests().then(setGuestList, setErrorMessage)}
+        onUpdateGuest={() => getGuests({ limit: 200 }).then(setGuestList, setErrorMessage)}
       />
       <NewGuestForm createNewGuest={createNewGuest} tables={tableList} sx={{ pt: 4 }} />
       {errorMessage && <Typography variant="body1">Error: {errorMessage}</Typography>}

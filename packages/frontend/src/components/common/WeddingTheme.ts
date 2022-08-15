@@ -14,6 +14,9 @@ export const themeOptions: ThemeOptions = {
     info: {
       main: "#677b86",
     },
+    success: {
+      main: "#00ab66",
+    },
   },
   typography: {
     fontFamily: "Lora",

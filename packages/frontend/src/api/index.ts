@@ -32,13 +32,15 @@ export type TableCreatePayload = Omit<Table, "_id">;
 
 interface GetGuestsOptions {
   nameQuery?: string;
+  limit?: number;
 }
 
-export async function getGuests(options?: GetGuestsOptions): Promise<Guest[]> {
+export async function getGuests({ nameQuery, limit = 100 }: GetGuestsOptions): Promise<Guest[]> {
   const params = new URLSearchParams();
+  params.append("limit", limit.toString());
 
-  if (options?.nameQuery) {
-    params.append("match", `name=(?i)${options.nameQuery}`);
+  if (nameQuery) {
+    params.append("match", `name=(?i)${nameQuery}`);
   }
 
   const response = await weddingWebsiteBackend.get<ListResponse<Guest>>("/guests", { params });
