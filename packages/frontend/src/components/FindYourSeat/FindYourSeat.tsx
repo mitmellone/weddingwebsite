@@ -1,18 +1,27 @@
 import { Autocomplete, Button, TextField, Typography } from "@mui/material";
 import { getGuests, Guest } from "api";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ReactAudioPlayer from "react-audio-player";
+import throttle from "lodash/throttle";
 import AnswerBox from "./AnswerBox";
 import ArtistPictures from "./ArtistPictures";
+
+const GET_GUEST_LIMIT = 5;
 
 export default function FindYourSeat() {
   const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
 
   const [guestSearchResults, setGuestSearchResults] = useState<Guest[]>([]);
+
+  const searchForGuests = useMemo(
+    () => throttle((nameQuery) => getGuests({ nameQuery, limit: GET_GUEST_LIMIT }).then(setGuestSearchResults), 500),
+    [],
+  );
+
   useEffect(() => {
-    getGuests({ limit: 2 }).then(setGuestSearchResults);
+    getGuests({ limit: 5 }).then(setGuestSearchResults);
   }, []);
-  const [userAnswer, setUserAnswer] = useState("");
+  const [userAnswer, setUserAnswer] = useState<string | null>(null);
   const correctAnswer = selectedGuest?.artist === userAnswer;
 
   const [showHintButton, setShowHintButton] = useState(false);
@@ -32,9 +41,7 @@ export default function FindYourSeat() {
       </Typography>
       <Autocomplete<Guest>
         onChange={(_, newValue) => setSelectedGuest(newValue)}
-        onInputChange={(_, inputValue) =>
-          getGuests({ nameQuery: inputValue, limit: 2 }).then(setGuestSearchResults)
-        }
+        onInputChange={(_, inputValue) => searchForGuests(inputValue)}
         options={guestSearchResults}
         fullWidth
         getOptionLabel={(option) => option.name}
@@ -52,9 +59,7 @@ export default function FindYourSeat() {
           <ReactAudioPlayer
             controls
             autoPlay
-            src={
-              selectedGuest.artist === "The Black Keys" ? "blackkeys.mp3" : "redHotChiliPeppers.mp3"
-            }
+            src={`${selectedGuest.artist?.replaceAll(" ", "_").toLowerCase()}.mp3`}
           />
           <AnswerBox
             label="Your answer"

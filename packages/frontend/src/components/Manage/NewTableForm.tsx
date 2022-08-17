@@ -30,7 +30,7 @@ export default function NewTableForm({ createNewTable, ...gridContainerProps }: 
           fullWidth
         />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={3}>
         <TextField
           label="Artist Name"
           value={artist}

@@ -12,15 +12,17 @@ export default function NewGuestForm({
   tables,
   ...gridContainerProps
 }: NewGuestFormProps) {
-  const [name, setName] = useState("");
+  const [namesToAdd, setNamesToAdd] = useState("");
   const [tableNumber, setTableNumber] = useState("");
 
   const onSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
     const table = Number.parseInt(tableNumber, 10);
     const selectedTable = tables.find(({ tableNumber: tn }) => tn === table);
-    createNewGuest({ name, table, artist: selectedTable?.artist });
-    setName("");
+    namesToAdd.split(",").forEach((name) => {
+      createNewGuest({ name, table, artist: selectedTable?.artist });
+    })
+    setNamesToAdd("");
     setTableNumber("");
   };
 
@@ -29,9 +31,10 @@ export default function NewGuestForm({
       <Grid item xs={7}>
         <TextField
           label="Name"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
+          value={namesToAdd}
+          onChange={(event) => setNamesToAdd(event.target.value)}
           fullWidth
+          helperText="Separate by commas to add multiple names"
         />
       </Grid>
       <Grid item xs={2}>
