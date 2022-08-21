@@ -8,6 +8,8 @@
     "packages/*"
   ],
   "scripts": {
-    "format": "yarn workspace weddingwebsite-frontend format"
+    "format": "yarn workspace weddingwebsite-frontend format",
+    "start-frontend": "yarn workspace weddingwebsite-frontend start",
+    "start-backend": "yarn workspace weddingwebsite-backend start:watch"
   }
 }

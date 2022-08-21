@@ -96,15 +96,7 @@ export default function FindYourSeat() {
               </Typography>
               <ArtistPictures
                 sx={{ mt: 2 }}
-                onImageClick={(artist) => {
-                  if (artist === selectedGuest.artist) {
-                    // eslint-disable-next-line no-alert
-                    window.alert(`You're right! You are at table number ${selectedGuest.table}`);
-                  } else {
-                    // eslint-disable-next-line no-alert
-                    window.alert("Try Again!");
-                  }
-                }}
+                targetArtist={selectedGuest.artist || ""}
               />
             </>
           )}
