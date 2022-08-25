@@ -14,7 +14,11 @@ export default function FindYourSeat() {
   const [guestSearchResults, setGuestSearchResults] = useState<Guest[]>([]);
 
   const searchForGuests = useMemo(
-    () => throttle((nameQuery) => getGuests({ nameQuery, limit: GET_GUEST_LIMIT }).then(setGuestSearchResults), 500),
+    () =>
+      throttle(
+        (nameQuery) => getGuests({ nameQuery, limit: GET_GUEST_LIMIT }).then(setGuestSearchResults),
+        500,
+      ),
     [],
   );
 
@@ -25,12 +29,13 @@ export default function FindYourSeat() {
   const correctAnswer = selectedGuest?.artist === userAnswer;
 
   const [showHintButton, setShowHintButton] = useState(false);
+  const [usedHint, setUsedHint] = useState(false);
   useEffect(() => {
     if (selectedGuest) {
       setShowHintButton(false);
       setTimeout(() => {
         setShowHintButton(true);
-      }, 10000);
+      }, 30000); // 30 seconds
     }
   }, [selectedGuest]);
 
@@ -70,13 +75,15 @@ export default function FindYourSeat() {
           />
           {correctAnswer ? (
             <Typography variant="h6" color="success.main">
-              That's right!
+              {usedHint
+                ? "This is the artist who plays that song."
+                : "You are right! That is the artist who is playing this song"}
             </Typography>
           ) : (
             !!userAnswer &&
             !correctAnswer && (
               <Typography variant="h6" color="error">
-                That's not quite it
+                That's not quite its
               </Typography>
             )
           )}
@@ -84,7 +91,10 @@ export default function FindYourSeat() {
             <Button
               variant="contained"
               sx={{ mt: 2 }}
-              onClick={() => setUserAnswer(selectedGuest.artist || "")}
+              onClick={() => {
+                setUserAnswer(selectedGuest.artist || "");
+                setUsedHint(true);
+              }}
             >
               Need a hint?
             </Button>
@@ -93,11 +103,10 @@ export default function FindYourSeat() {
             <>
               <Typography variant="body1">
                 So you know the artist's name, but what do they look like?
+                <br />
+                Swipe through the photos below and tap on the one that looks like them.
               </Typography>
-              <ArtistPictures
-                sx={{ mt: 2 }}
-                targetArtist={selectedGuest.artist || ""}
-              />
+              <ArtistPictures sx={{ mt: 2 }} targetArtist={selectedGuest.artist || ""} />
             </>
           )}
         </>
