@@ -14,7 +14,7 @@ const images = [
   { artist: "Foo Fighters", img: "images/foo_fighters.png" },
   { artist: "Lauryn Hill", img: "images/lauryn_hill.png" },
   { artist: "Lizzo", img: "images/lizzo.png" },
-  { artist: "Dwayne Johnson", img: "images/moana.png" },
+  { artist: "Dwayne Johnson", img: "images/dwayne_johnson.png" },
   { artist: "Psy", img: "images/psy.png" },
   { artist: "Queen", img: "images/queen.png" },
   { artist: "Red Hot Chili Peppers", img: "images/red_hot_chili_peppers.png" },

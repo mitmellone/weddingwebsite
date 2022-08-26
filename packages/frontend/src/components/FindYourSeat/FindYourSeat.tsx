@@ -71,7 +71,6 @@ export default function FindYourSeat() {
             value={userAnswer}
             onChange={(_, newValue) => setUserAnswer(newValue || "")}
             sx={{ my: 2 }}
-            color="error"
           />
           {correctAnswer ? (
             <Typography variant="h6" color="success.main">
@@ -83,7 +82,7 @@ export default function FindYourSeat() {
             !!userAnswer &&
             !correctAnswer && (
               <Typography variant="h6" color="error">
-                That's not quite its
+                That's not quite it
               </Typography>
             )
           )}
