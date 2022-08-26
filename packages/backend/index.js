@@ -11,7 +11,11 @@ const fastify = Fastify({
 });
 
 fastify.register(fastifyCors, {
-  origin: ["http://localhost:3000", "https://mellone-weddingwebsite-client.herokuapp.com"]
+  origin: [
+    "http://localhost:3000",
+    "http://mellone-weddingwebsite-client.herokuapp.com",
+    "https://mellone-weddingwebsite-client.herokuapp.com"
+  ]
 });
 
 async function initializeDatabase() {
